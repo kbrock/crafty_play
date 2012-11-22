@@ -12,13 +12,14 @@ var Game = {
 	score:        0
 }
 
-/**@
+/*
  * A Component that draws Text on a Canvas.
  */
 Crafty.c('CanvasText', {
 	/* Setting ready = true is necessary! It will not be drawn at all otherwise! */
 	ready: true,
-	/*
+
+	/**
 	 * CanvasText depends on 2D and Canvas, so add them here in `init`.
 	 * Also add a handler for the 'Draw' event which does the actual drawing 
 	 * of the Text.
@@ -43,7 +44,7 @@ Crafty.c('CanvasText', {
 		});
 	},
 
-	/**@
+	/**
 	 * Sets the Text.
 	 * @param text the Text
 	 */
@@ -54,7 +55,7 @@ Crafty.c('CanvasText', {
 		return this;
 	},
 
-	/**@
+	/**
 	 * Sets the Font.
 	 * @param font the Font
 	 */
@@ -64,7 +65,7 @@ Crafty.c('CanvasText', {
 			return this;
 	},
 
-	/**@
+	/**
 	 * Sets the Alignment.
 	 * @param align the Alignment (left, right, center). Default is left.
 	 */
@@ -107,7 +108,7 @@ Crafty.c('GameBoard', {
 								}, this);
 	},
 
-	/*
+	/**
 	 * Computes the coordinates for a box.
 	 * @param x the left side of the board
 	 * @param y the top of the board
@@ -218,7 +219,7 @@ Crafty.c('AwesomeBox', {
 	 */
 	ready: true,
 
-	/*
+	/**
 	 * Initialisation. Adds components, sets positions, binds mouse click handler
 	 */
 	init: function() {
@@ -236,7 +237,7 @@ Crafty.c('AwesomeBox', {
 		});
 	},
 
-	/*
+	/**
 	 * Convenience method for creating new boxes
 	 * @param x position on the x axis
 	 * @param y position on the y axis
@@ -273,12 +274,12 @@ Crafty.scene('Loading', function() {
 		.css({'text-align': 'center'});
 });
 
-/*
-	* We are using two Scenes:
-	* - the first one is the Game itself and is displayed when loading the page
-	* - the second one is the 'Play Again?' Scene, that shows the score and
-	*	 restarts the game on mouse click
-	*/
+/**
+ * We are using two Scenes:
+ * - the first one is the Game itself and is displayed when loading the page
+ * - the second one is the 'Play Again?' Scene, that shows the score and
+ *	 restarts the game on mouse click
+ */
 Crafty.scene('Game', function() {
 	console.log('== Game ==');
 
@@ -286,9 +287,9 @@ Crafty.scene('Game', function() {
 	Crafty.e('GameBoard');
 });
 
-/*
-* The PlayAgain scene looks pretty ugly, sorry. :)
-*/
+/**
+ * The PlayAgain scene looks pretty ugly, sorry. :)
+ */
 Crafty.scene('PlayAgain', function() {
 	console.log('== Play Again ==');
 
