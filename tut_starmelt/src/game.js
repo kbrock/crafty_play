@@ -70,9 +70,9 @@ Crafty.c('CanvasText', {
 	 * @param align the Alignment (left, right, center). Default is left.
 	 */
 	align: function(align) {
-			this._align = align;
-			this.trigger('Change');
-			return this;
+		this._align = align;
+		this.trigger('Change');
+		return this;
 	}
 });
 
@@ -99,13 +99,16 @@ Crafty.c('GameBoard', {
 	 */
 	_setupBoard: function(x, y, rows, cols, bw, bh) {
 		this._board = _.range(cols).map(function(c) {
-										return _.range(rows).map(function(r) {
-												var pos = this._computeBoxPos(x, y, c, r, Game.BOX_WIDTH, Game.BOX_HEIGHT);
-												var color = this.COLORS[Crafty.math.randomInt(0, 4)];
-												return Crafty.e('AwesomeBox').makeBox(pos.x, pos.y, color, _.bind(this._clickHandler, this));
-										}, this);
-										return column;
-								}, this);
+			return _.range(rows).map(function(r) {
+				var pos = this._computeBoxPos(x, y, c, r, Game.BOX_WIDTH, Game.BOX_HEIGHT);
+				return Crafty.e('AwesomeBox')
+					.makeBox(pos.x, pos.y, {
+						color: this.COLORS[Crafty.math.randomInt(0, 4)],
+						click: _.bind(this._clickHandler, this)
+					});
+			}, this);
+			return column;
+		}, this);
 	},
 
 	/**
@@ -124,7 +127,7 @@ Crafty.c('GameBoard', {
 		}
 	},
 
-	/*
+	/**
 	 * The callback click handler that is passed to the boxes
 	 */
 	_clickHandler: function(obj) {
@@ -137,7 +140,7 @@ Crafty.c('GameBoard', {
 		}
 	},
 
-	/*
+	/**
 	 * Convert mouse coordinates into board position.
 	 * Box (0,0) is in the left bottom corner, while coordinate (0,0) is in the left top!!
 	 */
@@ -148,7 +151,7 @@ Crafty.c('GameBoard', {
 		};
 	},
 
-	/*
+	/**
 	 * Iterate through all boxes and set new coordinates
 	 */
 	_moveBoxesToNewPositions: function() {
@@ -244,9 +247,12 @@ Crafty.c('AwesomeBox', {
 	 * @param color background color
 	 * @param onClickCallback a callback function that is called for mouse click events
 	 */
-	makeBox: function(x, y, color, onClickCallback) {
-		this.attr({x: x, y: y}).color(color);
-		this._onClickCallback = onClickCallback;
+	makeBox: function(x, y, opts) {
+		if (!opts) opts = {};
+
+		this.attr({x: x, y: y}).color(opts.color);
+		this._onClickCallback = opts.click;
+
 		return this;
 	}
 });
