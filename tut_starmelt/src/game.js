@@ -1,92 +1,111 @@
+var Game = {
+  WIDTH:      800,
+  HEIGHT:     640,
+  BOX_WIDTH:  32,
+  BOX_HEIGHT: 32,
+  BOARD_TOP:  100,
+  BOARD_LEFT: 160,
+  BOARD_ROWS: 10,
+  BOARD_COLS: 16
+}
 
+Crafty.c('GameBoard', {
+	/* The list of colors used for the game */
+	COLORS: ["#F00", "#0F0", "#FF0", "#F0F", "#0FF"],
 
-Crafty.c('Box', {
+	/**
+	 * Initialisation. Adds components, sets positions, creates the board
+	 */
+	init: function() {
+	  this.addComponent('2D, Canvas, Color');
+		this.x = Game.BOARD_LEFT;
+		this.y = Game.BOARD_TOP;
+		this.w = Game.BOX_WIDTH * Game.BOARD_COLS;
+		this.h = Game.BOX_HEIGHT * Game.BOARD_ROWS;
+		this.color("#888");
+		this._setupBoard(Game.BOARD_LEFT, Game.BOARD_TOP, Game.BOARD_ROWS, Game.BOARD_COLS, Game.BOX_WIDTH, Game.BOX_HEIGHT);
+	},
+
+	/**
+	 * Set up the board.
+	 * The board is an Array of columns, which again is an Array of Boxes.
+	 */
+	_setupBoard: function(x, y, rows, cols, bw, bh) {
+		this._board = [];
+		for (var c = 0; c < cols; c++) {
+			this._board[c] = [];
+			for (var r = 0; r < rows; r++) {
+				var that = this;
+				var newBox = Crafty.e('AwesomeBox').makeBox(x + c * Game.BOX_WIDTH
+											, y + (Game.BOX_HEIGHT * Game.BOARD_ROWS - (r + 1) * Game.BOX_HEIGHT)
+											, this.COLORS[Crafty.math.randomInt(0, 4)]
+											, function () {
+											    // bind to 'this' context!
+											    that._clickHandler.apply(that, arguments);
+											});
+				this._board[c][r] = newBox;
+			}
+		}
+	},
+
+	/**
+	 * The callback click handler that is passed to the boxes
+	 */
+	_clickHandler: function(obj) {
+		var aPos = this._translateToArrayPos(obj.x, obj.y);
+		console.log(aPos);
+	},
+
+	/**
+	 * Convert mouse coordinates into board position.
+	 * Box (0,0) is in the left bottom corner, while coordinate (0,0) is in the left top!!
+	 */
+	_translateToArrayPos: function(x, y) {
+		return {
+			x: Math.floor((x - Game.BOARD_LEFT) / Game.BOX_WIDTH),
+			y: (Game.BOARD_ROWS - 1) - Math.floor((y - Game.BOARD_TOP) / Game.BOX_HEIGHT)
+		};
+	}
+});
+
+Crafty.c('AwesomeBox', {
+  /*
+   * Setting ready: true is crucial when drawing on the Canvas. Otherwise the "Draw" event will not be triggered.
+   */
+  ready: true,
+
+  /*
+   * Initialisation. Adds components, sets positions, binds mouse click handler
+   */
   init: function() {
-    this.addComponent('2D, Canvas, Color');
+    this.addComponent('2D, Canvas, Color, Mouse, crate');
 
-    this.w = 32; // width
-    this.h = 32; // height
-    this.color('#FF9C9C');
+    this.w = Game.BOX_WIDTH;
+    this.h = Game.BOX_HEIGHT;
+
+    this.bind('Click', function(obj) {
+      if (this._onClickCallback) this._onClickCallback({
+        x: obj.realX,
+        y: obj.realY,
+        color: this._color
+      });
+    });
+  },
+
+  /*
+   * Convenience method for creating new boxes
+   * @param x position on the x axis
+   * @param y position on the y axis
+   * @param color background color
+   * @param onClickCallback a callback function that is called for mouse click events
+   */
+  makeBox: function(x, y, color, onClickCallback) {
+    this.attr({x: x, y: y}).color(color);
+    this._onClickCallback = onClickCallback;
+    return this;
   }
 });
 
-
-Crafty.c("AwesomeBox", {
-    /*
-     * Setting ready=true is crucial when drawing on the Canvas. Otherwise the "Draw" event will not be triggered.
-     */
-    ready: true,
-    /*
-     * Initialize the component.
-     */
-    init: function() {
-        this.addComponent("2D, Canvas, Fourway, Mouse, Tween");
-
-        this.w = 32;
-        this.h = 32;
-        this.fourway(10);
-
-        this.fade_out = function() {
-          this.tween({alpha: 0.0}, 50);
-        }
-
-        /*
-         * Define an event handler for the 'draw' event.
-         * This is where we hook in our custom _draw() method.
-         * The 'draw' event is triggered after the 'enterframe' event.
-         */
-        this.bind("Draw", function(obj) {
-            // Pass the Canvas context and the drawing region.
-            this._draw(obj.ctx, obj.pos);
-        });
-        this.bind("EnterFrame", function(e) {
-            if (this._alpha < 0.1) {
-                this.destroy();
-            }
-        });
-        this.bind("Click", function(e) {
-            console.log(arguments);
-            this.fade_out()
-        });
-    },
-    /*
-     * This is the method that gets called on 'draw' events.
-     * It draws a Box on the Canvas context.
-     *
-     * Theoretically the method can draw anywhere on the Canvas context, but it
-     * should only draw in the drawing region that is passed with the 'draw' event.
-     *
-     * @param ctx The Canvas context
-     * @param po The drawing region
-     */
-    _draw: function(ctx, po) {
-        var pos = {_x: po._x + 1, _y: po._y + 1, _w: po._w - 2, _h: po._h -2};
-
-        ctx.fillStyle = this._color;
-        ctx.fillRect(pos._x, pos._y, pos._w, pos._h);
-
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = this._strokeColor || "rgb(0,0,0)";
-        ctx.beginPath();
-        ctx.moveTo(pos._x, pos._y);
-        ctx.lineTo(pos._x + pos._w, pos._y);
-        ctx.lineTo(pos._x + pos._w, pos._y +  pos._h);
-        ctx.lineTo(pos._x, pos._y +  pos._h);
-        ctx.closePath();
-        ctx.stroke();
-        ctx.moveTo(pos._x, pos._y);
-        ctx.lineTo(pos._x + pos._w, pos._y +  pos._h);
-        ctx.stroke();
-        ctx.moveTo(pos._x + pos._w, pos._y);
-        ctx.lineTo(pos._x, pos._y +  pos._h);
-        ctx.stroke();
-    },
-    makeBox: function(x, y, color, strokeColor) {
-        this.attr({x: x, y: y});
-        this._color = color;
-        if (strokeColor) this._strokeColor = strokeColor;
-    }
-});
 
 // ====== //
 // Scenes //
@@ -110,52 +129,22 @@ Crafty.scene("loading", function() {
 
 // The main screen shows the game's primary components
 Crafty.scene('main', function() {
-  console.log('== Main ==');
+	console.log('== Main ==');
   
-  /*
-   * Create an entity with Crafty.e(..) that
-   *  - can be drawn (2D) on a HTML canvas (Canvas)
-   *  - has a background color (Color)
-   *  - can be moved with WASD or arrow keys (Fourway)
-   */
-  var pl = Crafty.e("2D, Canvas, Color, Fourway")
-             .attr({x: 60, y: 66, w: 32, h: 32}) // for Component 2D
-             .color("#FF9C9C") // for Component Color
-             .fourway(10); // for Component Fourway
-
-  console.log(pl);
-
-  var box1 = Crafty.e('Fourway, Box')
-              .attr({x: 120, y: 66, w: 32, h: 32}) // for Component 2D
-              .fourway(10); // for Component Fourway
-
-  var abox1 = Crafty.e('Fourway, AwesomeBox')
-              .attr({x: 60, y: 126, w: 32, h: 32}) // for Component 2D
-              .fourway(10); // for Component Fourway
-
-  var abox2 = Crafty.e('AwesomeBox').makeBox(180,  66, '#0FF')
-  var abox3 = Crafty.e('AwesomeBox').makeBox(180, 126, '#0FF',    'rgb(60,60,100)')
-  var abox4 = Crafty.e('AwesomeBox').makeBox( 60, 230, '#0FF',    '#050')
-  var abox5 = Crafty.e('AwesomeBox').makeBox(180, 230, '#277', '#020')
+	// Create the board
+	Crafty.e('GameBoard');
 });
 
 window.onload = function() {
 
-  // Start crafty
-  Crafty.init(400, 320);
+	// Start crafty
+	Crafty.init(Game.WIDTH, Game.HEIGHT);
 
-  // Turn the sprite map into usable components
-  Crafty.sprite(16, 'assets/crafty-sprite.png', {
-    grass1: [0, 0],
-    grass2: [1, 0],
-    grass3: [2, 0],
-    grass4: [3, 0],
-    flower: [0, 1],
-    bush1:  [0, 2],
-    bush2:  [1, 2],
-    player: [0, 3]
-  });
+	/*
+	 * Loads the Sprite PNG and create the only sprite 'crate' from it
+	 */
+	Crafty.sprite(32, 'assets/crate.png', { crate: [0, 0]});
   
-  // Automatically play the loading scene
-  Crafty.scene('loading');
+	// Automatically play the loading scene
+	Crafty.scene('loading');
 };
