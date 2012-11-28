@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Crafty Game</title>
+
+  <script type="text/javascript" src="lib/crafty.js"></script>
+  <script type="text/javascript" src="lib/underscore.js"></script>
+  <script type="text/javascript" src="src/components.js"></script>
+  <script type="text/javascript" src="src/game.js"></script>
+  <script>
+    window.addEventListener('load', Game.start.bind(Game), false);
+  </script>
+
+  <style>
+    body, html {
+      margin: 10px 0 0 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: Arial;
+      font-size: 20px
+    }
+
+    #cr-stage {
+      margin: 5px auto;
+      border: 3px solid rgba(100, 100, 100, 0.5);
+      border-radius: 3px;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+</body>
+</html>
