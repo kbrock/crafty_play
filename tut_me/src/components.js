@@ -1,3 +1,37 @@
+Crafty.c('Actor', {
+	_width:  16,
+	_height: 16,
+
+	init: function() {
+		this.requires('2D, Canvas, Color, Grid, Solid');
+
+		this.attr({
+			x: 0,
+			y: 0,
+			w: this._width,
+			h: this._height
+		});
+
+		this.Grid(Game.map_grid);
+		this.requires('Collision');
+		this.stopOnSolids();
+	},
+
+	stopOnSolids: function() {
+		this.onHit('Solid', this.stop);
+	},
+
+	// Stops the movement
+	stop: function() {
+		// console.log('Preventing movement');
+		this._speed = 0;
+		if (this._movement) {
+			this.x -= this._movement.x;
+			this.y -= this._movement.y;	
+		}
+	}
+});
+
 Crafty.c('Grid', {
 	// Define a default grid
 	_grid: {
@@ -9,32 +43,19 @@ Crafty.c('Grid', {
 	// Specify the grid for this entity
 	Grid: function(grid) {
 		this._grid = grid;
+		return this;
 	},
 
 	// Locate this entity at the given position on the grid
   at: function(x, y) {
   	this.attr({ x: x * this._grid.tile.width, y: y * this._grid.tile.height });
+		return this;
   }
 });
 
 Crafty.c('Tree', {
-	_width:  16,
-	_height: 16,
-
-	/**
-	 * Initialisation. Adds components, sets positions, binds mouse click handler
-	 */
 	init: function() {
-		this.addComponent('2D, Canvas, Color, Grid');
-		this.Grid(Game.map_grid);
-
-		this.attr({
-			x: 0,
-			y: 0,
-			w: this._width,
-			h: this._height
-		});
-
+		this.requires('Actor');
 		this.color('#215e29');
 	},
 
@@ -47,5 +68,22 @@ Crafty.c('Tree', {
 		this.attr({ x: opts.x, y: opts.y });
 
 		return this;
+	}
+});
+
+Crafty.c('Player', {
+	init: function() {
+		this.requires('2D, Canvas, Color, Grid, Fourway');
+		this.Grid(Game.map_grid);
+		this.fourway(4);
+		this.color('rgb(250, 50, 50)');
+
+		this.attr({
+			w: Game.map_grid.tile.width,
+			h: Game.map_grid.tile.height,
+			z: 1
+		});
+
+		this.requires('Collision, Actor');
 	}
 });
