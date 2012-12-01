@@ -3,7 +3,7 @@ Crafty.c('Actor', {
 	_height: 16,
 
 	init: function() {
-		this.requires('2D, Canvas, Color, Grid, Solid');
+		this.requires('2D, Canvas, Color, Grid');
 
 		this.attr({
 			x: 0,
@@ -55,7 +55,7 @@ Crafty.c('Grid', {
 
 Crafty.c('Tree', {
 	init: function() {
-		this.requires('Actor');
+		this.requires('Actor, Solid');
 		this.color('#215e29');
 	},
 
@@ -71,6 +71,18 @@ Crafty.c('Tree', {
 	}
 });
 
+Crafty.c('Item', {
+	init: function() {
+		this.requires('Actor');
+		this.color('#BB5500');
+	},
+
+  collect: function() {
+  	this.destroy();
+		Crafty.trigger('ItemCollected', item);
+  }
+});
+
 Crafty.c('Player', {
 	init: function() {
 		this.requires('2D, Canvas, Color, Grid, Fourway');
@@ -84,6 +96,30 @@ Crafty.c('Player', {
 			z: 1
 		});
 
-		this.requires('Collision, Actor');
+		this.requires('Collision, Actor, Solid');
+
+		this.onHit('Item', this.pickUpItem);
+	},
+
+	pickUpItem: function(data) {
+		item = data[0] && data[0].obj
+		console.log('pickUpItem');
+		console.log(arguments);
+		console.log('data', data)
+		console.log('item', item)
+		item.collect();
 	}
+});
+
+Crafty.c('ItemCounter', {
+	init: function() {
+		Crafty.bind('ItemCollected', function(e) {
+			console.log('e', e);
+		})
+	},
+
+  drawCount: function() {
+		// counterText = Crafty.e('2D, Text').text('hi').attr({ x: 50, y: 50, z: 2 });
+		this.textWidget.text(function() { console.log('... ', Crafty('Item').length); return 'Items left: ' + Crafty('Item').length; });
+  }
 });
