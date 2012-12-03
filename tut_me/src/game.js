@@ -1,3 +1,5 @@
+$text_css = { 'font-size': '24px', 'font-family': 'Arial', 'font-weight': 'bold', 'color': 'black', 'text-align': 'center' }
+
 var Game = {
 	WIDTH:  640,
 	HEIGHT: 320,
@@ -24,51 +26,33 @@ var Game = {
 		// Start crafty
 		Crafty.init(this.width(), this.height());
 
-		Crafty.background(Game.BACKGROUND_COLOR);
+		Crafty.background(this.BACKGROUND_COLOR);
 
-		this.setupMap();
-
-		window.counter = Crafty.e('ItemCounter');
-
-		counter.textWidget = Crafty.e('2D, DOM, Text').attr({ x: 24, y: 24, w: 150 });
-		counter.textWidget.text('Items left: ');
-		counter.textWidget.css({ 'font-size': '12px', 'font-weight': 'bold', 'color': 'black' });
-
-		counter.drawCount();
-
-		Crafty.bind('ItemCollected', function() {
-			console.log('ya', Crafty('Item').length);
-			counter.drawCount();
-		})
+		Crafty.scene('Game');
 
 		console.log('-- Game Initialized --');	
-	},
-
-	// Lay out all the pieces of the map
-	setupMap: function() {
-
-		// Player
-		this.player = Crafty.e('Player').at(5, 5);
-
-		// Trees
-		for (var x = 0; x < this.map_grid.width; x++) {
-			for (var y = 0; y < this.map_grid.height; y++) {
-				var place_it = x == 0 || x == this.map_grid.width - 1 || y == 0 || y == this.map_grid.height - 1 || Math.random() < 0.06
-				if (place_it && !(x == this.player.pos()._x && y == this.player.pos()._y)) {
-				  Crafty.e('Tree').at(x, y);
-				}
-			}
-		}
-
-		// Items
-		for (var x = 0; x < this.map_grid.width; x++) {
-			for (var y = 0; y < this.map_grid.height; y++) {
-				var place_it = !(x == 0 || x == this.map_grid.width - 1 || y == 0 || y == this.map_grid.height - 1) && Math.random() < 0.02
-				if (place_it && !(x == this.player.pos()._x && y == this.player.pos()._y)) {
-				  Crafty.e('Item').at(x, y);
-				}
-			}
-		}
 	}
 }
 Game.start = Game.start.bind(Game)
+
+Crafty.scene('Game', function() {
+	console.log('== Game ==');
+
+	var game_board   = Crafty.e('GameBoard'),
+	    item_counter = Crafty.e('ItemCounter');
+
+	Crafty.bind('ItemCollected', function() {
+		if (!Crafty('Item').length) {
+			Crafty.scene('Victory');
+		}
+	});
+});
+
+Crafty.scene('Victory', function() {
+	console.log('== Victory ==');
+
+	window.victory_text = Crafty.e('2D, DOM, Text')
+		.attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
+		.text('Victory!')
+		.css($text_css)
+});

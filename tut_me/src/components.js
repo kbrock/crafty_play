@@ -79,7 +79,7 @@ Crafty.c('Item', {
 
   collect: function() {
   	this.destroy();
-		Crafty.trigger('ItemCollected', item);
+		Crafty.trigger('ItemCollected', this);
   }
 });
 
@@ -113,13 +113,52 @@ Crafty.c('Player', {
 
 Crafty.c('ItemCounter', {
 	init: function() {
-		Crafty.bind('ItemCollected', function(e) {
-			console.log('e', e);
-		})
+		this.textWidget = Crafty.e('2D, DOM, Text')
+			.attr({ x: 24, y: 24, w: 150 })
+			.text('Items left: ')
+			.css({ 'font-size': '12px', 'font-weight': 'bold', 'color': 'black' });
+
+		var self = this;
+
+		this.drawCount();
+
+		Crafty.bind('ItemCollected', this.drawCount.bind(this));
 	},
 
   drawCount: function() {
-		// counterText = Crafty.e('2D, Text').text('hi').attr({ x: 50, y: 50, z: 2 });
-		this.textWidget.text(function() { console.log('... ', Crafty('Item').length); return 'Items left: ' + Crafty('Item').length; });
+		this.textWidget.text('Items left: ' + Crafty('Item').length);
   }
+});
+
+Crafty.c('GameBoard', {
+	init: function() {
+		this.setupMap();
+	},
+
+	// Lay out all the pieces of the map
+	setupMap: function() {
+
+		// Player
+		this.player = Crafty.e('Player').at(5, 5);
+
+		// Trees
+		for (var x = 0; x < Game.map_grid.width; x++) {
+			for (var y = 0; y < Game.map_grid.height; y++) {
+				var place_it = x == 0 || x == Game.map_grid.width - 1 || y == 0 || y == Game.map_grid.height - 1 || Math.random() < 0.06
+				if (place_it && !(x == this.player.pos()._x && y == this.player.pos()._y)) {
+				  Crafty.e('Tree').at(x, y);
+				}
+			}
+		}
+
+		// Items
+		for (var x = 0; x < Game.map_grid.width; x++) {
+			for (var y = 0; y < Game.map_grid.height; y++) {
+				var place_it = !(x == 0 || x == Game.map_grid.width - 1 || y == 0 || y == Game.map_grid.height - 1) && Math.random() < 0.02
+				if (place_it && !(x == this.player.pos()._x && y == this.player.pos()._y)) {
+				  Crafty.e('Item').at(x, y);
+				}
+			}
+		}
+	}
 });
