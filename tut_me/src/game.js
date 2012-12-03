@@ -4,8 +4,7 @@ var Game = {
 	WIDTH:  640,
 	HEIGHT: 320,
 
-	// BACKGROUND_COLOR: '#FFC187'
-	BACKGROUND_COLOR: 'rgba(255, 200, 90, 1.0)',
+	BACKGROUND_COLOR: 'rgba(70, 115, 12, 1.0)',
 
 	map_grid: {
 		width:  32,
@@ -28,12 +27,26 @@ var Game = {
 
 		Crafty.background(this.BACKGROUND_COLOR);
 
-		Crafty.scene('Game');
+		Crafty.scene('Loading');
 
 		console.log('-- Game Initialized --');	
 	}
 }
 Game.start = Game.start.bind(Game)
+
+Crafty.scene('Loading', function(){
+	console.log('== Loading ==');
+
+	Crafty.load(['assets/16x16_overworld.gif'], function(){
+	  Crafty.sprite(16, 'assets/16x16_overworld.gif', {
+			spr_tree:   [0, 3],
+			spr_player: [17, 8],
+			spr_item:   [16, 7]
+		});
+
+		Crafty.scene('Game');
+	})
+});
 
 Crafty.scene('Game', function() {
 	console.log('== Game ==');

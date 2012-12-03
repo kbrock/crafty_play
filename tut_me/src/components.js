@@ -55,7 +55,7 @@ Crafty.c('Grid', {
 
 Crafty.c('Tree', {
 	init: function() {
-		this.requires('Actor, Solid');
+		this.requires('Actor, Solid, spr_tree');
 		this.color('#215e29');
 	},
 
@@ -73,7 +73,7 @@ Crafty.c('Tree', {
 
 Crafty.c('Item', {
 	init: function() {
-		this.requires('Actor');
+		this.requires('Actor, spr_item');
 		this.color('#BB5500');
 	},
 
@@ -85,7 +85,7 @@ Crafty.c('Item', {
 
 Crafty.c('Player', {
 	init: function() {
-		this.requires('2D, Canvas, Color, Grid, Fourway');
+		this.requires('2D, Canvas, Color, Grid, Fourway, spr_player');
 		this.Grid(Game.map_grid);
 		this.fourway(4);
 		this.color('rgb(250, 50, 50)');
