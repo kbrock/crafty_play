@@ -28,8 +28,6 @@ var Game = {
 		Crafty.background(this.BACKGROUND_COLOR);
 
 		Crafty.scene('Loading');
-
-		console.log('-- Game Initialized --');	
 	}
 }
 Game.start = Game.start.bind(Game)
@@ -37,12 +35,15 @@ Game.start = Game.start.bind(Game)
 Crafty.scene('Loading', function(){
 	console.log('== Loading ==');
 
-	Crafty.load(['assets/16x16_overworld.gif'], function(){
+	Crafty.load(['assets/16x16_overworld.gif', 'assets/hunter.png'], function(){
 	  Crafty.sprite(16, 'assets/16x16_overworld.gif', {
 			spr_tree:   [0, 3],
-			spr_player: [17, 8],
 			spr_item:   [16, 7]
 		});
+
+	  Crafty.sprite(16, 'assets/hunter.png', {
+			spr_player:   [0, 0],
+		}, 0, 2);
 
 		Crafty.scene('Game');
 	})
