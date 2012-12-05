@@ -20,28 +20,23 @@ Crafty.scene('Loading', function(){
 	})
 });
 
-$show_victory = function() {
-	if (!Crafty('Village').length) {
-		Crafty.unbind('VillageVisited', $show_victory);
-		Crafty.scene('Victory');
-		console.log('showing victory');
-	}
-}
-
 Crafty.scene('Game', function() {
 	console.log('== Game ==');
 
-	var game_board   = Crafty.e('GameBoard'),
-	    item_counter = Crafty.e('ItemCounter');
+	this.game_board   = Crafty.e('GameBoard');
+	this.item_counter = Crafty.e('ItemCounter');
 
-	Crafty.bind('VillageVisited', $show_victory);
+	this.show_vic = this.bind('VillageVisited', function() {
+		if (!Crafty('Village').length) {
+			Crafty.scene('Victory');
+			// console.log('showing victory');
+		}
+	});
+}, function() {
+	this.game_board.destroy();
+	this.item_counter.destroy();
+	this.unbind('VillageVisited', this.show_vic);
 });
-
-var $restart_game = function() {
-	Crafty.unbind('KeyDown', $restart_game);
-	Crafty.scene('Game');
-	console.log('yep');
-}
 
 Crafty.scene('Victory', function() {
 	console.log('== Victory ==');
@@ -51,5 +46,9 @@ Crafty.scene('Victory', function() {
 		.text('Victory!')
 		.css($text_css)
 
-	Crafty.bind('KeyDown', $restart_game);
+	this.restart_game = this.bind('KeyDown', function() {
+		Crafty.scene('Game');
+	});
+}, function() {
+	this.unbind('KeyDown', this.restart_game);
 });

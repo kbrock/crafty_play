@@ -141,13 +141,11 @@ Crafty.c('ItemCounter', {
 
 		this.drawCount();
 
-		this.bound_drawcount = this.drawCount.bind(this);
-		Crafty.bind('VillageVisited', this.bound_drawcount);
+		this.bind('VillageVisited', this.drawCount);
 	},
 
   drawCount: function() {
 		this.textWidget.text('Villages left: ' + Crafty('Village').length);
-		Crafty.unbind('VillageVisited', this.bound_drawcount);
   }
 });
 
