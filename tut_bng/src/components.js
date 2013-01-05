@@ -9,14 +9,14 @@ Crafty.c('Grid', {
 	},
 
 	// Locate this entity at the given position on the grid
-  at: function(x, y) {
+	at: function(x, y) {
 		if (x === undefined && y === undefined) {
 			return { x: this.x/Game.map_grid.tile.width, y: this.y/Game.map_grid.tile.height }
 		} else {
 			this.attr({ x: x * Game.map_grid.tile.width, y: y * Game.map_grid.tile.height });
 			return this;
 		}
-  }
+	}
 });
 
 // An "Actor" is an entity that is drawn in 2D on canvas
@@ -30,25 +30,22 @@ Crafty.c('Actor', {
 // A Tree is just an Actor with a certain color
 Crafty.c('Tree', {
 	init: function() {
-		this.requires('Actor, Color, Solid')
-			.color('rgb(20, 125, 40)');
+		this.requires('Actor, Solid, spr_tree');
 	},
 });
 
 // A Bush is just an Actor with a certain color
 Crafty.c('Bush', {
 	init: function() {
-		this.requires('Actor, Color, Solid')
-			.color('rgb(20, 185, 40)');
+		this.requires('Actor, Solid, spr_bush');
 	},
 });
 
 // This is the player-controlled character
 Crafty.c('PlayerCharacter', {
 	init: function() {
-		this.requires('Actor, Fourway, Color, Collision')
+		this.requires('Actor, Fourway, Collision, spr_player')
 			.fourway(4)
-			.color('rgb(20, 75, 40)')
 			.stopOnSolids()
 			.onHit('Village', this.visitVillage);
 	},
@@ -73,18 +70,18 @@ Crafty.c('PlayerCharacter', {
 	// Respond to this player visiting a village
 	visitVillage: function(data) {
 		villlage = data[0].obj;
-		villlage.collect();
+		villlage.visit();
 	}
 });
 
 // A village is a tile on the grid that the PC must visit in order to win the game
 Crafty.c('Village', {
 	init: function() {
-		this.requires('Actor, Color')
-			.color('rgb(170, 125, 40)');
+		this.requires('Actor, spr_village');
 	},
 
-	collect: function() {
+	// Process a visitation with this village
+	visit: function() {
 		this.destroy();
 		Crafty.trigger('VillageVisited', this);
 	}
