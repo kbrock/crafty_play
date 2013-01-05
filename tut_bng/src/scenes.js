@@ -84,8 +84,8 @@ Crafty.scene('Victory', function() {
 // Handles the loading of binary assets such as images and audio files
 Crafty.scene('Loading', function(){
 	// Load our sprite map image
-	Crafty.load(['assets/16x16_forest_1.gif'], function(){
-		// Once the image is loaded...
+	Crafty.load(['assets/16x16_forest_1.gif', 'assets/hunter.png'], function(){
+		// Once the images are loaded...
 
 		// Define the individual sprites in the image
 		// Each one (spr_tree, etc.) becomes a component
@@ -95,9 +95,14 @@ Crafty.scene('Loading', function(){
 		Crafty.sprite(16, 'assets/16x16_forest_1.gif', {
 			spr_tree:    [0, 0],
 			spr_bush:    [1, 0],
-			spr_village: [0, 1],
-			spr_player:  [1, 1]
+			spr_village: [0, 1]
 		});
+
+		// Define the PC's sprite to be the first sprite in the third row of the
+		//  animation sprite map
+		Crafty.sprite(16, 'assets/hunter.png', {
+			spr_player:  [0, 2],
+		}, 0, 2);
 
 		// Draw some text for the player to see in case the file
 		//  takes a noticeable amount of time to load
