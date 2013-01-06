@@ -27,17 +27,24 @@ Crafty.c('Actor', {
 	},
 });
 
-// A Tree is just an Actor with a certain color
+// A Tree is just an Actor with a certain sprite
 Crafty.c('Tree', {
 	init: function() {
 		this.requires('Actor, Solid, spr_tree');
 	},
 });
 
-// A Bush is just an Actor with a certain color
+// A Bush is just an Actor with a certain sprite
 Crafty.c('Bush', {
 	init: function() {
 		this.requires('Actor, Solid, spr_bush');
+	},
+});
+
+// A Rock is just an Actor with a certain sprite
+Crafty.c('Rock', {
+	init: function() {
+    this.requires('Actor, Solid, spr_rock');
 	},
 });
 
