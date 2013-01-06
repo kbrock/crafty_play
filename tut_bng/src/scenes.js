@@ -84,7 +84,7 @@ Crafty.scene('Victory', function() {
 // Handles the loading of binary assets such as images and audio files
 Crafty.scene('Loading', function(){
 	// Load our sprite map image
-	Crafty.load(['assets/16x16_forest_1.gif', 'assets/hunter.png'], function(){
+	Crafty.load(['assets/16x16_forest_1.gif', 'assets/hunter.png', 'assets/door_knock_3x.mp3', 'assets/door_knock_3x.ogg', 'assets/door_knock_3x.aac'], function(){
 		// Once the images are loaded...
 
 		// Define the individual sprites in the image
@@ -103,6 +103,11 @@ Crafty.scene('Loading', function(){
 		Crafty.sprite(16, 'assets/hunter.png', {
 			spr_player:  [0, 2],
 		}, 0, 2);
+
+		// Define our sounds for later use
+		Crafty.audio.add({
+			knock: ['assets/door_knock_3x.mp3', 'assets/door_knock_3x.ogg', 'assets/door_knock_3x.aac']
+		});
 
 		// Draw some text for the player to see in case the file
 		//  takes a noticeable amount of time to load
