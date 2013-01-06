@@ -32,11 +32,11 @@ Crafty.scene('Game', function() {
 		}
 	}
 
-	// Generate up to five villages on the map in random locations
+	// Generate five villages on the map in random locations
 	var max_villages = 5;
 	for (var x = 0; x < Game.map_grid.width; x++) {
 		for (var y = 0; y < Game.map_grid.height; y++) {
-			if (Math.random() < 0.02) {
+			if (Math.random() < 0.03) {
 				if (Crafty('Village').length < max_villages && !this.occupied[x][y]) {
 					Crafty.e('Village').at(x, y);
 				}
@@ -64,13 +64,18 @@ Crafty.scene('Game', function() {
 Crafty.scene('Victory', function() {
 	// Display some text in celebration of the victory
 	Crafty.e('2D, DOM, Text')
-		.attr({ x: 0, y: 0 })
-		.text('Victory!');
+		.text('All villages visited!')
+		.attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
+		.css($text_css);
 
-	// Watch for the player to press a key, then restart the game
-	//  when a key is pressed
-	this.restart_game = this.bind('KeyDown', function() {
-		Crafty.scene('Game');
+	// After a short delay, watch for the player to press a key, then restart
+	// the game when a key is pressed
+	var delay = true;
+	setTimeout(function() { delay = false; }, 1000);
+	this.restart_game = Crafty.bind('KeyDown', function() {
+		if (!delay) {
+			Crafty.scene('Game');
+		}
 	});
 }, function() {
 	// Remove our event binding from above so that we don't
@@ -83,6 +88,13 @@ Crafty.scene('Victory', function() {
 // -------------
 // Handles the loading of binary assets such as images and audio files
 Crafty.scene('Loading', function(){
+	// Draw some text for the player to see in case the file
+	//  takes a noticeable amount of time to load
+	Crafty.e('2D, DOM, Text')
+		.text('Loading; please wait...')
+		.attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
+		.css($text_css);
+
 	// Load our sprite map image
 	Crafty.load(['assets/16x16_forest_1.gif', 'assets/hunter.png', 'assets/door_knock_3x.mp3', 'assets/door_knock_3x.ogg', 'assets/door_knock_3x.aac'], function(){
 		// Once the images are loaded...
@@ -108,12 +120,6 @@ Crafty.scene('Loading', function(){
 		Crafty.audio.add({
 			knock: ['assets/door_knock_3x.mp3', 'assets/door_knock_3x.ogg', 'assets/door_knock_3x.aac']
 		});
-
-		// Draw some text for the player to see in case the file
-		//  takes a noticeable amount of time to load
-		Crafty.e('2D, DOM, Text')
-			.attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
-			.text('Loading...');
 
 		// Now that our sprites are ready to draw, start the game
 		Crafty.scene('Game');
