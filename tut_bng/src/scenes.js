@@ -45,6 +45,9 @@ Crafty.scene('Game', function() {
 		}
 	}
 
+	// Play a ringing sound to indicate the start of the journey
+	Crafty.audio.play('ring');
+
 	// Show the victory screen once all villages are visisted
 	this.show_victory = this.bind('VillageVisited', function() {
 		if (!Crafty('Village').length) {
@@ -69,10 +72,13 @@ Crafty.scene('Victory', function() {
 		.attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
 		.css($text_css);
 
+	// Give'em a round of applause!
+	Crafty.audio.play('applause');
+
 	// After a short delay, watch for the player to press a key, then restart
 	// the game when a key is pressed
 	var delay = true;
-	setTimeout(function() { delay = false; }, 1000);
+	setTimeout(function() { delay = false; }, 5000);
 	this.restart_game = Crafty.bind('KeyDown', function() {
 		if (!delay) {
 			Crafty.scene('Game');
@@ -97,7 +103,19 @@ Crafty.scene('Loading', function(){
 		.css($text_css);
 
 	// Load our sprite map image
-	Crafty.load(['assets/16x16_forest_2.gif', 'assets/hunter.png', 'assets/door_knock_3x.mp3', 'assets/door_knock_3x.ogg', 'assets/door_knock_3x.aac'], function(){
+	Crafty.load([
+		'assets/16x16_forest_2.gif',
+		'assets/hunter.png',
+		'assets/door_knock_3x.mp3',
+		'assets/door_knock_3x.ogg',
+		'assets/door_knock_3x.aac',
+		'assets/board_room_applause.mp3',
+		'assets/board_room_applause.ogg',
+		'assets/board_room_applause.aac',
+		'assets/candy_dish_lid.mp3',
+		'assets/candy_dish_lid.ogg',
+		'assets/candy_dish_lid.aac'
+		], function(){
 		// Once the images are loaded...
 
 		// Define the individual sprites in the image
@@ -120,7 +138,9 @@ Crafty.scene('Loading', function(){
 
 		// Define our sounds for later use
 		Crafty.audio.add({
-			knock: ['assets/door_knock_3x.mp3', 'assets/door_knock_3x.ogg', 'assets/door_knock_3x.aac']
+			knock: 	  ['assets/door_knock_3x.mp3', 'assets/door_knock_3x.ogg', 'assets/door_knock_3x.aac'],
+			applause: ['assets/board_room_applause.mp3', 'assets/board_room_applause.ogg', 'assets/board_room_applause.aac'],
+			ring:     ['assets/candy_dish_lid.mp3', 'assets/candy_dish_lid.ogg', 'assets/candy_dish_lid.aac']
 		});
 
 		// Now that our sprites are ready to draw, start the game
