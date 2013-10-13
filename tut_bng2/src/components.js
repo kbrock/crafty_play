@@ -120,3 +120,12 @@ Crafty.c('Village', {
 		Crafty.trigger('VillageVisited', this);
 	}
 });
+
+// Our standard bold, centered, white text
+Crafty.c('BoldCenteredText', {
+	init: function() {
+		this.requires('Text')
+			.textFont({ size: '24px', family: 'Arial' })
+			.css({'color': 'white', 'text-align': 'center'});
+	}
+});

@@ -67,10 +67,9 @@ Crafty.scene('Game', function() {
 // Tells the player when they've won and lets them start a new game
 Crafty.scene('Victory', function() {
 	// Display some text in celebration of the victory
-	Crafty.e('2D, DOM, Text')
+	Crafty.e('2D, DOM, BoldCenteredText')
 		.text('All villages visited!')
-		.attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
-		.css($text_css);
+		.attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() });
 
 	// Give'em a round of applause!
 	Crafty.audio.play('applause');
@@ -85,7 +84,7 @@ Crafty.scene('Victory', function() {
 		}
 	};
 
-	this.restart_game = Crafty.bind('KeyDown', this.restart_game);
+	Crafty.bind('KeyDown', this.restart_game);
 }, function() {
 	// Remove our event binding from above so that we don't
 	//  end up having multiple redundant event watchers after
@@ -99,10 +98,9 @@ Crafty.scene('Victory', function() {
 Crafty.scene('Loading', function(){
 	// Draw some text for the player to see in case the file
 	//  takes a noticeable amount of time to load
-	Crafty.e('2D, DOM, Text')
+	Crafty.e('2D, DOM, BoldCenteredText')
 		.text('Loading; please wait...')
-		.attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
-		.css($text_css);
+		.attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() });
 
 	// Load our sprite map image
 	Crafty.load([
