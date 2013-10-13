@@ -1,19 +1,15 @@
+function occupied(x, y) {
+	return _.any(_.invoke(Krafty.withComponents('Actor'), 'at'), function(loc) {
+		return loc.x === x && loc.y === y;
+	});
+}
+
 // Game scene
 // -------------
 // Runs the core gameplay loop
 Crafty.scene('Game', function() {
-	// A 2D array to keep track of all occupied tiles
-	this.occupied = new Array(Game.mapGrid.width);
-	for (var i = 0; i < Game.mapGrid.width; i++) {
-		this.occupied[i] = new Array(Game.mapGrid.height);
-		for (var y = 0; y < Game.mapGrid.height; y++) {
-			this.occupied[i][y] = false;
-		}
-	}
-
 	// Player character, placed at 5, 5 on our grid
 	this.player = Crafty.e('PlayerCharacter').at(5, 5);
-	this.occupied[this.player.at().x][this.player.at().y] = true;
 
 	// Place a tree at every edge square on our grid of 16x16 tiles
 	for (var x = 0; x < Game.mapGrid.width; x++) {
@@ -23,12 +19,10 @@ Crafty.scene('Game', function() {
 			if (at_edge) {
 				// Place a tree entity at the current tile
 				Crafty.e('Tree').at(x, y);
-				this.occupied[x][y] = true;
-			} else if (Math.random() < 0.06 && !this.occupied[x][y]) {
+			} else if (Math.random() < 0.06 && !occupied(x, y)) {
 				// Place a bush entity at the current tile
 				var actorComponentName = (Math.random() > 0.3) ? 'Bush' : 'Rock';
 				Crafty.e(actorComponentName).at(x, y);
-				this.occupied[x][y] = true;
 			}
 		}
 	}
@@ -38,7 +32,7 @@ Crafty.scene('Game', function() {
 	for (var x = 0; x < Game.mapGrid.width; x++) {
 		for (var y = 0; y < Game.mapGrid.height; y++) {
 			if (Math.random() < 0.03) {
-				if (Crafty('Village').length < max_villages && !this.occupied[x][y]) {
+				if (Crafty('Village').length < max_villages && !occupied(x, y)) {
 					Crafty.e('Village').at(x, y);
 				}
 			}
