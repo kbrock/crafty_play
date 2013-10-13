@@ -18,16 +18,16 @@ Crafty.scene('Game', function() {
 	// Place a tree at every edge square on our grid of 16x16 tiles
 	for (var x = 0; x < Game.map_grid.width; x++) {
 		for (var y = 0; y < Game.map_grid.height; y++) {
-			var at_edge = x == 0 || x == Game.map_grid.width - 1 || y == 0 || y == Game.map_grid.height - 1;
+			var at_edge = x === 0 || x === Game.map_grid.width - 1 || y === 0 || y === Game.map_grid.height - 1;
 
 			if (at_edge) {
 				// Place a tree entity at the current tile
-				Crafty.e('Tree').at(x, y)
+				Crafty.e('Tree').at(x, y);
 				this.occupied[x][y] = true;
 			} else if (Math.random() < 0.06 && !this.occupied[x][y]) {
 				// Place a bush entity at the current tile
-				var bush_or_rock = (Math.random() > 0.3) ? 'Bush' : 'Rock'
-				Crafty.e(bush_or_rock).at(x, y)
+				var bush_or_rock = (Math.random() > 0.3) ? 'Bush' : 'Rock';
+				Crafty.e(bush_or_rock).at(x, y);
 				this.occupied[x][y] = true;
 			}
 		}
@@ -138,12 +138,12 @@ Crafty.scene('Loading', function(){
 
 		// Define our sounds for later use
 		Crafty.audio.add({
-			knock: 	  ['assets/door_knock_3x.mp3', 'assets/door_knock_3x.ogg', 'assets/door_knock_3x.aac'],
+			knock:    ['assets/door_knock_3x.mp3', 'assets/door_knock_3x.ogg', 'assets/door_knock_3x.aac'],
 			applause: ['assets/board_room_applause.mp3', 'assets/board_room_applause.ogg', 'assets/board_room_applause.aac'],
 			ring:     ['assets/candy_dish_lid.mp3', 'assets/candy_dish_lid.ogg', 'assets/candy_dish_lid.aac']
 		});
 
 		// Now that our sprites are ready to draw, start the game
 		Crafty.scene('Game');
-	})
+	});
 });
