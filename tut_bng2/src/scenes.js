@@ -3,10 +3,10 @@
 // Runs the core gameplay loop
 Crafty.scene('Game', function() {
 	// A 2D array to keep track of all occupied tiles
-	this.occupied = new Array(Game.map_grid.width);
-	for (var i = 0; i < Game.map_grid.width; i++) {
-		this.occupied[i] = new Array(Game.map_grid.height);
-		for (var y = 0; y < Game.map_grid.height; y++) {
+	this.occupied = new Array(Game.mapGrid.width);
+	for (var i = 0; i < Game.mapGrid.width; i++) {
+		this.occupied[i] = new Array(Game.mapGrid.height);
+		for (var y = 0; y < Game.mapGrid.height; y++) {
 			this.occupied[i][y] = false;
 		}
 	}
@@ -16,9 +16,9 @@ Crafty.scene('Game', function() {
 	this.occupied[this.player.at().x][this.player.at().y] = true;
 
 	// Place a tree at every edge square on our grid of 16x16 tiles
-	for (var x = 0; x < Game.map_grid.width; x++) {
-		for (var y = 0; y < Game.map_grid.height; y++) {
-			var at_edge = x === 0 || x === Game.map_grid.width - 1 || y === 0 || y === Game.map_grid.height - 1;
+	for (var x = 0; x < Game.mapGrid.width; x++) {
+		for (var y = 0; y < Game.mapGrid.height; y++) {
+			var at_edge = x === 0 || x === Game.mapGrid.width - 1 || y === 0 || y === Game.mapGrid.height - 1;
 
 			if (at_edge) {
 				// Place a tree entity at the current tile
@@ -26,8 +26,8 @@ Crafty.scene('Game', function() {
 				this.occupied[x][y] = true;
 			} else if (Math.random() < 0.06 && !this.occupied[x][y]) {
 				// Place a bush entity at the current tile
-				var bush_or_rock = (Math.random() > 0.3) ? 'Bush' : 'Rock';
-				Crafty.e(bush_or_rock).at(x, y);
+				var actorComponentName = (Math.random() > 0.3) ? 'Bush' : 'Rock';
+				Crafty.e(actorComponentName).at(x, y);
 				this.occupied[x][y] = true;
 			}
 		}
@@ -35,8 +35,8 @@ Crafty.scene('Game', function() {
 
 	// Generate five villages on the map in random locations
 	var max_villages = 5;
-	for (var x = 0; x < Game.map_grid.width; x++) {
-		for (var y = 0; y < Game.map_grid.height; y++) {
+	for (var x = 0; x < Game.mapGrid.width; x++) {
+		for (var y = 0; y < Game.mapGrid.height; y++) {
 			if (Math.random() < 0.03) {
 				if (Crafty('Village').length < max_villages && !this.occupied[x][y]) {
 					Crafty.e('Village').at(x, y);
@@ -49,7 +49,7 @@ Crafty.scene('Game', function() {
 	Crafty.audio.play('ring');
 
 	// Show the victory screen once all villages are visisted
-	this.show_victory = this.bind('VillageVisited', function() {
+	this.showVictory = this.bind('VillageVisited', function() {
 		if (!Crafty('Village').length) {
 			Crafty.scene('Victory');
 		}
@@ -58,7 +58,7 @@ Crafty.scene('Game', function() {
 	// Remove our event binding from above so that we don't
 	//  end up having multiple redundant event watchers after
 	//  multiple restarts of the game
-	this.unbind('VillageVisited', this.show_victory);
+	this.unbind('VillageVisited', this.showVictory);
 });
 
 
