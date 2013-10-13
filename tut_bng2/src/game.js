@@ -1,13 +1,13 @@
 Game = {
 	// This defines our grid's size and the size of each of its tiles
-	mapGrid: {
+	mapGrid: Grid.create({
 		width:  24,
 		height: 16,
 		tile: {
 			width:  16,
 			height: 16
 		}
-	},
+	}),
 
 	// The total width of the game screen. Since our grid takes up the entire screen
 	//  this is just the width of a tile times the width of the grid

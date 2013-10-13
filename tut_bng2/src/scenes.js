@@ -1,9 +1,3 @@
-function occupied(x, y) {
-	return _.any(_.invoke(Krafty.withComponents('Actor'), 'at'), function(loc) {
-		return loc.x === x && loc.y === y;
-	});
-}
-
 // Game scene
 // -------------
 // Runs the core gameplay loop
@@ -19,7 +13,7 @@ Crafty.scene('Game', function() {
 			if (at_edge) {
 				// Place a tree entity at the current tile
 				Crafty.e('Tree').at(x, y);
-			} else if (Math.random() < 0.06 && !occupied(x, y)) {
+			} else if (Math.random() < 0.06 && !Grid.occupied(x, y)) {
 				// Place a bush entity at the current tile
 				var actorComponentName = (Math.random() > 0.3) ? 'Bush' : 'Rock';
 				Crafty.e(actorComponentName).at(x, y);
@@ -32,7 +26,7 @@ Crafty.scene('Game', function() {
 	for (var x = 0; x < Game.mapGrid.width; x++) {
 		for (var y = 0; y < Game.mapGrid.height; y++) {
 			if (Math.random() < 0.03) {
-				if (Crafty('Village').length < max_villages && !occupied(x, y)) {
+				if (Crafty('Village').length < max_villages && !Grid.occupied(x, y)) {
 					Crafty.e('Village').at(x, y);
 				}
 			}
