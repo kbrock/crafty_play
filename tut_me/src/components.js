@@ -89,11 +89,11 @@ Crafty.c('Player', {
 	init: function() {
 		this.requires('2D, Canvas, Grid, Fourway, SpriteAnimation, spr_player');
 		this.Grid(Game.map_grid);
-		this.fourway(4);
-		this.animate('PlayerMovingUp', 0, 0, 2);
-		this.animate('PlayerMovingRight', 0, 1, 2);
-		this.animate('PlayerMovingDown', 0, 2, 2);
-		this.animate('PlayerMovingLeft', 0, 3, 2);
+		this.fourway(4)
+		    .reel('PlayerMovingUp',    100, 0, 0, 2)
+		    .reel('PlayerMovingRight', 100, 0, 1, 2)
+		    .reel('PlayerMovingDown',  100, 0, 2, 2)
+		    .reel('PlayerMovingLeft',  100, 0, 3, 2);
 
 		this.attr({
 			w: Game.map_grid.tile.width,
@@ -105,18 +105,17 @@ Crafty.c('Player', {
 
 		this.onHit('Village', this.visitVillage);
 
-		var animation_speed = 8;
 		this.bind('NewDirection', function(data) {
 			if (data.x > 0) {
-				this.animate('PlayerMovingRight', animation_speed, -1);
+				this.animate('PlayerMovingRight', -1);
 			} else if (data.x < 0) {
-				this.animate('PlayerMovingLeft', animation_speed, -1);
+				this.animate('PlayerMovingLeft', -1);
 			} else if (data.y > 0) {
-				this.animate('PlayerMovingDown', animation_speed, -1);
+				this.animate('PlayerMovingDown', -1);
 			} else if (data.y < 0) {
-				this.animate('PlayerMovingUp', animation_speed, -1);
+				this.animate('PlayerMovingUp', -1);
 			} else {
-				this.stop();
+				this.pauseAnimation();
 			}
 		});
 	},

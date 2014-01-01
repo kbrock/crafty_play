@@ -1,5 +1,3 @@
-$text_css = { 'font-size': '24px', 'font-family': 'Arial', 'font-weight': 'bold', 'color': 'black', 'text-align': 'center' }
-
 var Game = {
 	WIDTH:  640,
 	HEIGHT: 320,

@@ -14,7 +14,9 @@ Crafty.scene('Loading', function(){
 		Crafty.e('2D, DOM, Text')
 			.attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
 			.text('Loading...')
-			.css($text_css);
+			.textColor('white')
+			.textFont({ "size": '24px', 'family': 'Arial'})
+			.css('text-align', 'center');
 
 		Crafty.scene('Game');
 	})
@@ -26,12 +28,13 @@ Crafty.scene('Game', function() {
 	this.game_board   = Crafty.e('GameBoard');
 	this.item_counter = Crafty.e('ItemCounter');
 
-	this.show_vic = this.bind('VillageVisited', function() {
+	this.show_vic = function() {
 		if (!Crafty('Village').length) {
 			Crafty.scene('Victory');
 			// console.log('showing victory');
 		}
-	});
+	}
+	this.bind('VillageVisited', this.show_vic);
 }, function() {
 	this.game_board.destroy();
 	this.item_counter.destroy();
@@ -44,11 +47,14 @@ Crafty.scene('Victory', function() {
 	Crafty.e('2D, DOM, Text')
 		.attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
 		.text('Victory!')
-		.css($text_css)
+		.textColor('white')
+		.textFont({ "size": '24px', 'family': 'Arial'})
+		.css('text-align', 'center');
 
-	this.restart_game = this.bind('KeyDown', function() {
+	this.restart_game = function() {
 		Crafty.scene('Game');
-	});
+	}
+	this.bind('KeyDown', this.restart_game);
 }, function() {
 	this.unbind('KeyDown', this.restart_game);
 });
